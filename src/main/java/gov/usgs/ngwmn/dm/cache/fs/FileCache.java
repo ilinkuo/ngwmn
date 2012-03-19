@@ -10,7 +10,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class FileCache implements Cache {
+	private Logger logger = LoggerFactory.getLogger(FileCache.class);
 	
 	private File basedir;
 	private String filename(Specifier spec) {
@@ -29,9 +33,13 @@ public class FileCache implements Cache {
 	{
 		File f = contentFile(well);
 		File tf = File.createTempFile("LDR", ".xml");
+		
+		// TODO Need to make these stats available to DataBroker
 		Statistics s = new Statistics();
 		
-		return new TempfileOutputStream(f, tf, s);
+		OutputStream v = new TempfileOutputStream(f, tf, s);
+		logger.info("Created tfos for {}", well);
+		return v;
 	}
 	
 	public enum Status {OK,FAIL,DONE};
@@ -48,6 +56,7 @@ public class FileCache implements Cache {
 		Statistics stat = new Statistics();
 		copyTo(fis,puttee, stat);
 		
+		logger.info("Copied {} to destination, stats={}", spec, stat);
 		return stat;
 	}
 	

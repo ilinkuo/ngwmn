@@ -6,15 +6,19 @@ public class Statistics {
 	private int count;
 	private FileCache.Status status;
 	
-	public int getCount() {
+	public synchronized int getCount() {
 		return count;
 	}
 
-	public void setCount(int count) {
+	public synchronized void setCount(int count) {
 		this.count = count;
 	}
+	
+	public synchronized void incrementCount(int c) {
+		this.count += c;
+	}
 
-	public FileCache.Status getStatus() {
+	public synchronized FileCache.Status getStatus() {
 		return status;
 	}
 
@@ -22,6 +26,10 @@ public class Statistics {
 		this.status = status;
 		this.notifyAll();
 	}
-	
 
+	@Override
+	public String toString() {
+		return String.format("Statistics [count=%s, status=%s]", count, status);
+	}
+	
 }

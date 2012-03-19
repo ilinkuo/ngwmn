@@ -13,10 +13,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DataManager extends HttpServlet {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	private DataBroker db;
+	private Logger logger = LoggerFactory.getLogger(DataManager.class);
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -34,6 +38,7 @@ public class DataManager extends HttpServlet {
 			throws ServletException, IOException {
 		
 		Specifier spec = parseSpecifier(req);
+		checkSpec(spec);
 		
 		try {
 			// resp.setContentType("application/xml");
@@ -47,7 +52,7 @@ public class DataManager extends HttpServlet {
 				puttee.close();
 			}
 		} finally {
-			// log data output
+			logger.info("Done with request for specifier {}", spec);
 		}
 		
 	}
@@ -68,6 +73,12 @@ public class DataManager extends HttpServlet {
 		return spec;
 	}
 
+	private void checkSpec(Specifier spec) throws ServletException {
+		if (null == spec.getFeatureID() || spec.getFeatureID().isEmpty()) {
+			throw new ServletException("No feature identified by input");			
+		}
+	}
+	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -78,10 +89,9 @@ public class DataManager extends HttpServlet {
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		Specifier spec = parseSpecifier(req);
+		checkSpec(spec);
 		
 		db.put(spec, req.getInputStream());
 	}
-	
-	
 
 }
