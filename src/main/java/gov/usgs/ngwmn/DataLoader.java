@@ -1,7 +1,9 @@
 package gov.usgs.ngwmn;
 
-import java.io.InputStream;
+import gov.usgs.ngwmn.dm.cache.Specifier;
+
+import java.io.OutputStream;
 
 public interface DataLoader {
-	void loadWellData(String siteId, String typeId, InputStream data);
+	OutputStream getOutputStream(Specifier spec);
 }

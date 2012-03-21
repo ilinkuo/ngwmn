@@ -4,6 +4,7 @@ public class Specifier {
 //	private String agency;
 //	private String well;
 	private String featureID;
+	private String typeID;
 	
 //	public String getAgency() {
 //		return agency;
@@ -25,9 +26,15 @@ public class Specifier {
 		this.featureID = featureID;
 	}
 	
+	public String getTypeID() {
+		return typeID;
+	}
+	public void setTypeID(String typeID) {
+		this.typeID = typeID;
+	}
 	@Override
 	public String toString() {
-		return "Specifier [featureID=" + featureID + "]";
+		return "Specifier [featureID=" + featureID + " typeID=" + typeID + "]";
 	}
 
 	
