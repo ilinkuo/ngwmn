@@ -1,4 +1,4 @@
-package gov.usgs.ngwmn;
+package gov.usgs.ngwmn.dm;
 
 import java.io.InputStream;
 import java.io.OutputStream;

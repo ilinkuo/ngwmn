@@ -1,5 +1,7 @@
 package gov.usgs.ngwmn.dm.cache;
 
+import gov.usgs.ngwmn.dm.Pipeline;
+
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -13,7 +15,7 @@ public interface Cache {
 	 */
 	public OutputStream destination(Specifier well) throws IOException;
 
-	public Statistics get(Specifier spec, OutputStream puttee)
+	public Statistics fetchWellData(Specifier spec, Pipeline pipe)
 			throws IOException;
 
 }

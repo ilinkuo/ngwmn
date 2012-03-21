@@ -1,4 +1,5 @@
-package gov.usgs.ngwmn;
+package gov.usgs.ngwmn.dm;
+
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,6 +15,9 @@ public class Pipeline {
 	
 	public void setOutputStream(OutputStream out) {
 		os = out;
+	}
+	public OutputStream getOutputStream() {
+		return os;
 	}
 	
 	public void setInvoker(Invoker invoke) {

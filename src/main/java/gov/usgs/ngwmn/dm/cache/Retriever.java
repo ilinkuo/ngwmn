@@ -1,19 +1,19 @@
 package gov.usgs.ngwmn.dm.cache;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import gov.usgs.ngwmn.dm.DataFetcher;
+import gov.usgs.ngwmn.dm.Pipeline;
 
-public class Retriever {
+public class Retriever implements DataFetcher {
 	private Cache cache;
 	
 	public Retriever(Cache c) {
 		this.cache = c;
 	}
 
-	public Statistics get(Specifier spec, OutputStream puttee) 
-		throws IOException
-	{
-		return cache.get(spec, puttee);
+	@Override
+	public boolean fetchWellData(Specifier spec, Pipeline pipe) throws Exception {
+		// TODO Auto-generated method stub
+		return cache.fetchWellData(spec, pipe) != null; // TODO place holder for now
 	}
 	
 }

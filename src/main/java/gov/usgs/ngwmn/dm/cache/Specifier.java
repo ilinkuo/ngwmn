@@ -1,7 +1,5 @@
 package gov.usgs.ngwmn.dm.cache;
 
-import java.util.EnumSet;
-import java.util.Set;
 
 import gov.usgs.ngwmn.WellDataType;
 

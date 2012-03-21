@@ -1,5 +1,6 @@
 package gov.usgs.ngwmn.dm.cache.fs;
 
+import gov.usgs.ngwmn.dm.Pipeline;
 import gov.usgs.ngwmn.dm.cache.Cache;
 import gov.usgs.ngwmn.dm.cache.Specifier;
 import gov.usgs.ngwmn.dm.cache.Statistics;
@@ -47,14 +48,14 @@ public class FileCache implements Cache {
 	/**
 	 * @see gov.usgs.ngwmn.dm.cache.Cache#get(gov.usgs.ngwmn.dm.cache.Specifier, java.io.OutputStream)
 	 */
-	public Statistics get(Specifier spec, OutputStream puttee) 
+	public Statistics fetchWellData(Specifier spec, Pipeline pipe) 
 			throws IOException
 	{
 		File f = contentFile(spec);
 		
 		FileInputStream fis = new FileInputStream(f);
 		Statistics stat = new Statistics();
-		copyTo(fis,puttee, stat);
+		copyTo(fis, pipe.getOutputStream(), stat);
 		
 		logger.info("Copied {} to destination, stats={}", spec, stat);
 		return stat;

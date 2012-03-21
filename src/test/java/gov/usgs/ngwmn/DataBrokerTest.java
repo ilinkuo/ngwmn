@@ -1,5 +1,7 @@
 package gov.usgs.ngwmn;
 
+import gov.usgs.ngwmn.dm.DataFetcher;
+
 import java.io.InputStream;
 import java.security.InvalidParameterException;
 

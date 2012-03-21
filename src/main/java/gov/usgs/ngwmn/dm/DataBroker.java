@@ -1,45 +1,81 @@
 package gov.usgs.ngwmn.dm;
 
+import gov.usgs.ngwmn.dm.TeeOutputStream;
+import gov.usgs.ngwmn.dm.cache.Specifier;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import gov.usgs.ngwmn.dm.cache.Loader;
-import gov.usgs.ngwmn.dm.cache.Retriever;
-import gov.usgs.ngwmn.dm.cache.Specifier;
-import gov.usgs.ngwmn.dm.cache.Statistics;
-import gov.usgs.ngwmn.dm.cache.fs.FileCache;
+import java.security.InvalidParameterException;
 
 public class DataBroker {
 
-	private Logger logger = LoggerFactory.getLogger(DataBroker.class);
-			
-	private Retriever rtr;
-	private Loader ldr;
-	
-	public Statistics get(Specifier spec, OutputStream puttee)
-			throws IOException {
-		return rtr.get(spec, puttee);
-	}
+	private DataFetcher harvester;
+	private DataFetcher retriever;
 
-	public void setCache(FileCache c) {
-		rtr = new Retriever(c);	
-		ldr = new Loader(c);
+	private DataLoader  loader;
+	
+	
+	public void fetchWellData(Specifier spec, OutputStream out) throws Exception {
+		Pipeline pipe = new Pipeline();
+
+		validate(spec);
+		
+		pipe.setOutputStream(out);
+		boolean success = fetchWellData(retriever, spec, pipe);
+		
+		if ( ! success) {
+			out = new TeeOutputStream(out, loader.getOutputStream(spec));
+			pipe.setOutputStream(out);
+			success = fetchWellData(harvester, spec, pipe); 
+		}
+		
+		if ( ! success) {
+			attachDataNotFoundMsg(pipe);
+		}
+		pipe.invoke();
 	}
 	
-	public void put(Specifier spec, InputStream is) 
-			throws IOException 
-	{
-		OutputStream dest = ldr.destination(spec);
+	private void attachDataNotFoundMsg(Pipeline pipe) {
 		
-		// TODO Need to merge this statistics data with the data from the TempfileOutputStream.
-		Statistics s = FileCache.copyStream(is, dest);
-		dest.close();
-		
-		logger.info("saved info for {}, stats {}", spec, s);
 	}
 	
+	public void setHarvester(DataFetcher harvester) {
+		this.harvester = harvester;
+	}
+	public void setRetriever(DataFetcher retriever) {
+		this.retriever = retriever;
+	}
+	public void setLoader(DataLoader loader) {
+		this.loader = loader;
+	}
+	
+	void validate(Specifier spec) throws Exception {
+		if (retriever == null && harvester == null) 
+			throw new NullPointerException("At least one Data Fetcher is required");
+		if ( isEmpty(spec.getFeatureID()) ) 
+			throw new InvalidParameterException("Well Site Id may not be null");
+		if ( spec.getTypeID() != null ) 
+			throw new InvalidParameterException("Well data type Id may not be null");
+	}
+	
+	boolean fetchWellData(DataFetcher dataFetcher, Specifier spec, Pipeline pipe) throws Exception {
+		if (dataFetcher != null) {
+			return dataFetcher.fetchWellData(spec, pipe);
+		}
+		return false;
+	}
+	
+	// to be replaced with util function - apache commons?
+	boolean isEmpty(String string) {
+		return string == null || string.length()==0;
+	}
+	// to be enh to return the read byte back
+	boolean isEmpty(InputStream stream) {
+		try {
+			return stream == null || stream.read() == -1;
+		} catch (IOException e) {
+			return true;
+		}
+	}
 }
