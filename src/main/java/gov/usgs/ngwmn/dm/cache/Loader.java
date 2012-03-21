@@ -5,21 +5,21 @@ import java.io.OutputStream;
 
 public class Loader {
 
-	private Cache c;
+	private Cache cache;
 	
 	public OutputStream destination(Specifier well) 
 			throws IOException
 	{
-		return c.destination(well);
+		return cache.destination(well);
 	}
 
 	public Cache getCache() {
-		return c;
+		return cache;
 	}
 
 	public Loader(Cache c) {
 		super();
-		this.c = c;
+		this.cache = c;
 	}
 
 }

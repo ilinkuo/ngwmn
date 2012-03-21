@@ -1,10 +1,15 @@
 package gov.usgs.ngwmn.dm.cache;
 
+import java.util.EnumSet;
+import java.util.Set;
+
+import gov.usgs.ngwmn.WellDataType;
+
 public class Specifier {
 //	private String agency;
 //	private String well;
 	private String featureID;
-	private String typeID;
+	private Set<WellDataType> typeID;
 	
 //	public String getAgency() {
 //		return agency;
@@ -26,14 +31,34 @@ public class Specifier {
 		this.featureID = featureID;
 	}
 	
-	public String getTypeID() {
+	public synchronized Set<WellDataType> getTypeIDs() {
+		if (typeID == null) {
+			typeID = EnumSet.noneOf(WellDataType.class);
+		}
 		return typeID;
 	}
-	public void setTypeID(String typeID) {
+	public void addTypeID(WellDataType t) {
+		Set<WellDataType> s = getTypeIDs();
+		s.add(t);
+	}
+	
+	public synchronized void setTypes(String[] types) {
+		typeID = EnumSet.noneOf(WellDataType.class);
+		for (String t : types) {
+			WellDataType w = WellDataType.valueOf(t);
+			typeID.add(w);
+		}
+	}
+	
+	
+	public void setTypeIDs(Set<WellDataType> typeID) {
 		this.typeID = typeID;
 	}
+	
 	@Override
 	public String toString() {
 		return "Specifier [featureID=" + featureID + " typeID=" + typeID + "]";
 	}
+
+	
 }

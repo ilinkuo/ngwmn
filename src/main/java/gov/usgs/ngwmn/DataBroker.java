@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.InvalidParameterException;
+import java.util.Set;
 
 public class DataBroker {
 
@@ -55,10 +56,14 @@ public class DataBroker {
 			throw new NullPointerException("At least one Data Fetcher is required");
 		if ( isEmpty(spec.getFeatureID()) ) 
 			throw new InvalidParameterException("Well Site Id may not be null");
-		if ( isEmpty(spec.getTypeID()) ) 
+		if ( isEmpty(spec.getTypeIDs()) ) 
 			throw new InvalidParameterException("Well data type Id may not be null");
 	}
 	
+	private boolean isEmpty(Set<WellDataType> typeID) {
+		return typeID == null || typeID.isEmpty();
+	}
+
 	boolean fetchWellData(DataFetcher dataFetcher, Specifier spec, Pipeline pipe) throws Exception {
 		if (dataFetcher != null) {
 			return dataFetcher.fetchWellData(spec, pipe);

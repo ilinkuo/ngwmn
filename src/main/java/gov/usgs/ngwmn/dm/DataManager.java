@@ -70,6 +70,9 @@ public class DataManager extends HttpServlet {
 		Specifier spec = new Specifier();
 		spec.setFeatureID(featureID);
 		
+		String[] types = req.getParameterValues("type");
+		spec.setTypes(types);
+		
 		return spec;
 	}
 
