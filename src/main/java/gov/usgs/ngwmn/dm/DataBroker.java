@@ -1,7 +1,8 @@
 package gov.usgs.ngwmn.dm;
 
-import gov.usgs.ngwmn.dm.TeeOutputStream;
 import gov.usgs.ngwmn.dm.cache.Specifier;
+import gov.usgs.ngwmn.dm.io.Pipeline;
+import gov.usgs.ngwmn.dm.io.TeeOutputStream;
 
 import java.io.IOException;
 import java.io.InputStream;

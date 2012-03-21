@@ -1,6 +1,6 @@
 package gov.usgs.ngwmn.dm.cache;
 
-import gov.usgs.ngwmn.dm.Pipeline;
+import gov.usgs.ngwmn.dm.io.Pipeline;
 
 import java.io.IOException;
 import java.io.OutputStream;

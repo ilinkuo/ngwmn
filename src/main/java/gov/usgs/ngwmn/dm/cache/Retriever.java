@@ -1,7 +1,7 @@
 package gov.usgs.ngwmn.dm.cache;
 
 import gov.usgs.ngwmn.dm.DataFetcher;
-import gov.usgs.ngwmn.dm.Pipeline;
+import gov.usgs.ngwmn.dm.io.Pipeline;
 
 public class Retriever implements DataFetcher {
 	private Cache cache;

@@ -1,9 +1,10 @@
 package gov.usgs.ngwmn.dm.cache.fs;
 
-import gov.usgs.ngwmn.dm.Pipeline;
 import gov.usgs.ngwmn.dm.cache.Cache;
 import gov.usgs.ngwmn.dm.cache.Specifier;
 import gov.usgs.ngwmn.dm.cache.Statistics;
+import gov.usgs.ngwmn.dm.io.Pipeline;
+import gov.usgs.ngwmn.dm.io.TempfileOutputStream;
 
 import java.io.File;
 import java.io.FileInputStream;
