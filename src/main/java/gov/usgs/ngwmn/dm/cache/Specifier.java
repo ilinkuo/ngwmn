@@ -9,7 +9,7 @@ public class Specifier {
 //	private String agency;
 //	private String well;
 	private String featureID;
-	private Set<WellDataType> typeID;
+	private WellDataType typeID;
 	
 //	public String getAgency() {
 //		return agency;
@@ -31,27 +31,11 @@ public class Specifier {
 		this.featureID = featureID;
 	}
 	
-	public synchronized Set<WellDataType> getTypeIDs() {
-		if (typeID == null) {
-			typeID = EnumSet.noneOf(WellDataType.class);
-		}
+	public synchronized WellDataType getTypeID() {
 		return typeID;
 	}
-	public void addTypeID(WellDataType t) {
-		Set<WellDataType> s = getTypeIDs();
-		s.add(t);
-	}
 	
-	public synchronized void setTypes(String[] types) {
-		typeID = EnumSet.noneOf(WellDataType.class);
-		for (String t : types) {
-			WellDataType w = WellDataType.valueOf(t);
-			typeID.add(w);
-		}
-	}
-	
-	
-	public void setTypeIDs(Set<WellDataType> typeID) {
+	public void setTypeID(WellDataType typeID) {
 		this.typeID = typeID;
 	}
 	

@@ -56,12 +56,12 @@ public class DataBroker {
 			throw new NullPointerException("At least one Data Fetcher is required");
 		if ( isEmpty(spec.getFeatureID()) ) 
 			throw new InvalidParameterException("Well Site Id may not be null");
-		if ( isEmpty(spec.getTypeIDs()) ) 
+		if ( isEmpty(spec.getTypeID()) ) 
 			throw new InvalidParameterException("Well data type Id may not be null");
 	}
 	
-	private boolean isEmpty(Set<WellDataType> typeID) {
-		return typeID == null || typeID.isEmpty();
+	private boolean isEmpty(WellDataType typeID) {
+		return typeID == null;
 	}
 
 	boolean fetchWellData(DataFetcher dataFetcher, Specifier spec, Pipeline pipe) throws Exception {

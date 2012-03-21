@@ -1,5 +1,6 @@
 package gov.usgs.ngwmn.dm;
 
+import gov.usgs.ngwmn.WellDataType;
 import gov.usgs.ngwmn.dm.cache.Specifier;
 import gov.usgs.ngwmn.dm.cache.fs.FileCache;
 
@@ -70,8 +71,12 @@ public class DataManager extends HttpServlet {
 		Specifier spec = new Specifier();
 		spec.setFeatureID(featureID);
 		
-		String[] types = req.getParameterValues("type");
-		spec.setTypes(types);
+		String type = req.getParameter("type");
+		if (type == null) {
+			type = "ALL";
+		}
+		WellDataType wdt = WellDataType.valueOf(type);
+		spec.setTypeID(wdt);
 		
 		return spec;
 	}
