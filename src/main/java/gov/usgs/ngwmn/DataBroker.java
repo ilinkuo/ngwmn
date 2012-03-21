@@ -1,33 +1,43 @@
 package gov.usgs.ngwmn;
 
+import gov.usgs.ngwmn.dm.TeeOutputStream;
+import gov.usgs.ngwmn.dm.cache.Specifier;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.security.InvalidParameterException;
 
-public class DataBroker implements DataFetcher {
+public class DataBroker {
 
 	private DataFetcher harvester;
 	private DataFetcher retriever;
 
-	private DataLoader loader;
+	private DataLoader  loader;
 	
 	
-	public InputStream fetchWellData(String siteId, String typeId) throws Exception {
+	public void fetchWellData(Specifier spec, OutputStream out) throws Exception {
+		Pipeline pipe = new Pipeline();
+
+		validate(spec);
 		
-		validate(siteId, typeId);
+		pipe.setOutputStream(out);
+		boolean success = fetchWellData(retriever, spec, pipe);
 		
-		InputStream result = fetchWellData(retriever, siteId, typeId);
-		
-		if ( isEmpty(result) ) {
-			
-			result = fetchWellData(harvester, siteId, typeId); 
-			
-			if ( ! isEmpty(result) ) {
-				loader.loadWellData(siteId, typeId, result);
-			}
+		if ( ! success) {
+			out = new TeeOutputStream(out, loader.getOutputStream(spec));
+			pipe.setOutputStream(out);
+			success = fetchWellData(harvester, spec, pipe); 
 		}
 		
-		return result;
+		if ( ! success) {
+			attachDataNotFoundMsg(pipe);
+		}
+		pipe.invoke();
+	}
+	
+	private void attachDataNotFoundMsg(Pipeline pipe) {
+		
 	}
 	
 	public void setHarvester(DataFetcher harvester) {
@@ -40,20 +50,20 @@ public class DataBroker implements DataFetcher {
 		this.loader = loader;
 	}
 	
-	void validate(String siteId, String typeId) throws Exception {
+	void validate(Specifier spec) throws Exception {
 		if (retriever == null && harvester == null) 
 			throw new NullPointerException("At least one Data Fetcher is required");
-		if ( isEmpty(siteId) ) 
+		if ( isEmpty(spec.getFeatureID()) ) 
 			throw new InvalidParameterException("Well Site Id may not be null");
-		if ( isEmpty(typeId) ) 
+		if ( isEmpty(spec.getTypeID()) ) 
 			throw new InvalidParameterException("Well data type Id may not be null");
 	}
 	
-	InputStream fetchWellData(DataFetcher dataFetcher, String siteId, String typeId) throws Exception {
+	boolean fetchWellData(DataFetcher dataFetcher, Specifier spec, Pipeline pipe) throws Exception {
 		if (dataFetcher != null) {
-			return dataFetcher.fetchWellData(siteId, typeId);
+			return dataFetcher.fetchWellData(spec, pipe);
 		}
-		return null;
+		return false;
 	}
 	
 	// to be replaced with util function - apache commons?

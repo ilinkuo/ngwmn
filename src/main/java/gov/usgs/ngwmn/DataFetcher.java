@@ -1,7 +1,8 @@
 package gov.usgs.ngwmn;
 
-import java.io.InputStream;
+import gov.usgs.ngwmn.dm.cache.Specifier;
+
 
 public interface DataFetcher {
-	InputStream fetchWellData(String siteId, String typeId) throws Exception;
+	boolean fetchWellData(Specifier spec, Pipeline pipe) throws Exception;
 }
