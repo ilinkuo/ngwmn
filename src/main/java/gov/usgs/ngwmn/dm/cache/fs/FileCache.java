@@ -89,12 +89,30 @@ public class FileCache implements Cache {
 		return stat;
 	}
 	
+	
 	public File getBasedir() {
 		return basedir;
 	}
 
 	public void setBasedir(File basedir) {
 		this.basedir = basedir;
+	}
+
+	public boolean contains(Specifier spec) {
+		File f = contentFile(spec);
+		
+		if (f == null) {
+			logger.warn("no such file spec as {}", f);
+			return false;
+		}
+		if ( ! f.exists()) {
+			logger.info("no cached file {}", f);
+			return false;
+		}
+		if ( ! f.canRead()) {
+			logger.warn("file exists but not readable {}", f);
+		}
+		return true;
 	}
 	
 	

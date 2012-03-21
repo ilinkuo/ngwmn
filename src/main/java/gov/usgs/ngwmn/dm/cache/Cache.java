@@ -18,4 +18,6 @@ public interface Cache {
 	public Statistics fetchWellData(Specifier spec, Pipeline pipe)
 			throws IOException;
 
+	public boolean contains(Specifier spec);
+
 }
