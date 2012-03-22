@@ -19,7 +19,7 @@ public class UrlFactory {
 		Properties props = new Properties();
 		ClassLoader loader = UrlFactory.class.getClassLoader();
 		try {
-			props.load(loader.getResourceAsStream("/well-url.properties"));
+			props.load(loader.getResourceAsStream("well-url.properties"));
 		} catch (IOException e) {
 			throw new RuntimeException("The ", e);
 		}
@@ -37,7 +37,7 @@ public class UrlFactory {
 		for (WellDataType type : WellDataType.values()) {
 			url = urls.get(type);
 			if ( ! StringUtils.isEmpty(url) ) {
-				url = paramReplace(spec.getAgencyID(), spec.getFeatureID());
+				url = injectParams(url, spec.getAgencyID(), spec.getFeatureID());
 				break;
 			}
 		}
@@ -47,8 +47,10 @@ public class UrlFactory {
 		return url;
 	}
 
-	private String paramReplace(String agencyID, String featureID) {
-		return "";
+	String injectParams(String url, String agencyID, String featureID) {
+		url = url.replace("<agencyId>", agencyID);
+		url = url.replace("<featureId>", featureID);
+		return url;
 	}
 	
 }
