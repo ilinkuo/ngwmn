@@ -18,8 +18,6 @@ public interface Cache {
 	public boolean fetchWellData(Specifier spec, Pipeline pipe)
 			throws IOException;
 
-	public boolean contains(Specifier spec);
-	
-	public enum Status {OK,FAIL,DONE};
+	public boolean contains(Specifier spec);;
 }
 

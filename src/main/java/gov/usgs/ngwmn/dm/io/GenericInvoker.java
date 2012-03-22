@@ -1,6 +1,6 @@
 package gov.usgs.ngwmn.dm.io;
 
-import gov.usgs.ngwmn.dm.cache.Statistics;
+import gov.usgs.ngwmn.dm.cache.PipeStatistics;
 import gov.usgs.ngwmn.dm.cache.fs.FileCache;
 
 import java.io.IOException;
@@ -15,9 +15,9 @@ public class GenericInvoker implements Invoker {
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Override
-	public void invoke(InputStream is, OutputStream os) throws IOException {
-		Statistics stat = FileCache.copyStream(is, os);
-		logger.info("Copied {} to destination {}, stats={}", new Object[]{is, os, stat});
+	public void invoke(InputStream is, OutputStream os, PipeStatistics stats) throws IOException {
+		FileCache.copyStream(is, os, stats);
+		logger.info("Copied {} to destination {}, stats={}", new Object[]{is, os, stats});
 	}
 
 }

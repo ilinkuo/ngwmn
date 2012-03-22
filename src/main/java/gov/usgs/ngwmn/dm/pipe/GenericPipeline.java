@@ -14,7 +14,7 @@ public class GenericPipeline extends Pipeline {
 
 	@Override
 	public void perform() throws IOException {
-		FileCache.copyStream(input, output);
+		FileCache.copyStream(input, output, null);
 	}
 
 }

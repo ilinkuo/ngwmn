@@ -2,7 +2,7 @@ package gov.usgs.ngwmn.dm.cache.fs;
 
 import gov.usgs.ngwmn.dm.cache.Cache;
 import gov.usgs.ngwmn.dm.cache.Specifier;
-import gov.usgs.ngwmn.dm.cache.Statistics;
+import gov.usgs.ngwmn.dm.cache.PipeStatistics;
 import gov.usgs.ngwmn.dm.io.FileInputInvoker;
 import gov.usgs.ngwmn.dm.io.Invoker;
 import gov.usgs.ngwmn.dm.io.Pipeline;
@@ -40,7 +40,7 @@ public class FileCache implements Cache {
 		File tf = File.createTempFile("LDR", ".xml");
 		
 		// TODO Need to make these stats available to DataBroker
-		Statistics s = new Statistics();
+		PipeStatistics s = new PipeStatistics();
 		
 		OutputStream v = new TempfileOutputStream(f, tf, s);
 		logger.info("Created tfos for {}", well);
@@ -64,7 +64,7 @@ public class FileCache implements Cache {
 		return true;
 	}
 	
-	private static void copyTo(InputStream is, OutputStream os, Statistics stat) 
+	private static void copyTo(InputStream is, OutputStream os, PipeStatistics stat) 
 			throws IOException 
 	{
 		// TODO: measure performance, see if nio might be worthwhile.
@@ -79,16 +79,16 @@ public class FileCache implements Cache {
 			}
 			os.write(buf,ops,ict);
 			ops += ict;
+			stat.incrementCount(ict);
 		}
-		stat.setCount(ops);
+		
+		// TODO close here?
 	}
 
-	public static Statistics copyStream(InputStream is, OutputStream os) 
+	public static void copyStream(InputStream is, OutputStream os, PipeStatistics stats) 
 			throws IOException
 	{
-		Statistics stat = new Statistics();
-		copyTo(is, os, stat);
-		return stat;
+		copyTo(is, os, stats);
 	}
 	
 	

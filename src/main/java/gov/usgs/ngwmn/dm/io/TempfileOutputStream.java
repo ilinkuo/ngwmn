@@ -1,7 +1,7 @@
 package gov.usgs.ngwmn.dm.io;
 
-import gov.usgs.ngwmn.dm.cache.Statistics;
-import gov.usgs.ngwmn.dm.cache.Cache.Status;
+import gov.usgs.ngwmn.dm.cache.PipeStatistics;
+import gov.usgs.ngwmn.dm.cache.PipeStatistics.Status;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,14 +9,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class TempfileOutputStream extends OutputStream {
-	private Statistics stat;
+	private PipeStatistics stat;
 	private File endpoint;
 	private File tempfile;
 	
 	private OutputStream delegate;
-	private Status status = Status.OK;
+	private PipeStatistics.Status status = PipeStatistics.Status.OPEN;
 	
-	public TempfileOutputStream(File ep, File tmp, Statistics s) {
+	public TempfileOutputStream(File ep, File tmp, PipeStatistics s) {
 		stat = s;
 		endpoint = ep;
 		tempfile = tmp;
@@ -24,18 +24,18 @@ public class TempfileOutputStream extends OutputStream {
 		try {
 			delegate = new FileOutputStream(tmp);
 		} catch (Exception e) {
-			stat.setStatus(Status.FAIL);
+			stat.setStatus(PipeStatistics.Status.FAIL);
 		}
 	}
 	
 	public void close() throws IOException {
-		if (status == Status.OK) {
+		if (status == PipeStatistics.Status.OPEN) {
 			try {
 				delegate.close();
 				tempfile.renameTo(endpoint);
-				stat.setStatus(Status.DONE);
+				stat.setStatus(PipeStatistics.Status.DONE);
 			} catch (IOException e) {
-				stat.setStatus(Status.FAIL);
+				stat.setStatus(PipeStatistics.Status.FAIL);
 				throw e;
 			}
 		}
@@ -46,11 +46,11 @@ public class TempfileOutputStream extends OutputStream {
 	}
 
 	public void flush() throws IOException {
-		if (status == Status.OK) {
+		if (status == PipeStatistics.Status.OPEN) {
 			try {
 				delegate.flush();
 			} catch (IOException ioe) {
-				stat.setStatus(Status.FAIL);
+				stat.setStatus(PipeStatistics.Status.FAIL);
 				throw ioe;
 			}
 		}
@@ -65,33 +65,33 @@ public class TempfileOutputStream extends OutputStream {
 	}
 
 	public void write(byte[] b, int off, int len) throws IOException {
-		if (status == Status.OK) {
+		if (status == PipeStatistics.Status.OPEN) {
 			try {
 				delegate.write(b, off, len);
 			} catch (IOException ioe) {
-				stat.setStatus(Status.FAIL);
+				stat.setStatus(PipeStatistics.Status.FAIL);
 				throw ioe;
 			}
 		}
 	}
 
 	public void write(byte[] b) throws IOException {
-		if (status == Status.OK) {
+		if (status == PipeStatistics.Status.OPEN) {
 			try {
 				delegate.write(b);
 			} catch (IOException ioe) {
-				stat.setStatus(Status.FAIL);
+				stat.setStatus(PipeStatistics.Status.FAIL);
 				throw ioe;
 			}
 		}
 	}
 
 	public void write(int b) throws IOException {
-		if (status == Status.OK) {
+		if (status == PipeStatistics.Status.OPEN) {
 			try {
 				delegate.write(b);
 			} catch (IOException ioe) {
-				stat.setStatus(Status.FAIL);
+				stat.setStatus(PipeStatistics.Status.FAIL);
 				throw ioe;
 			}
 		}

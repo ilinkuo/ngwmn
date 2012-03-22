@@ -18,7 +18,7 @@ public class FilePipeline extends Pipeline {
 	@Override
 	public void perform() throws IOException {
 		// TODO Use NIO channel
-		FileCache.copyStream(finput, output);
+		FileCache.copyStream(finput, output, null);
 	}
 
 }
