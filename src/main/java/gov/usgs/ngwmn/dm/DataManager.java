@@ -29,10 +29,17 @@ public class DataManager extends HttpServlet {
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		String basedir = config.getInitParameter("FSCache.basedir");
+		if (basedir == null) {
+			throw new ServletException("config parameter FSCache.basedir is required");
+		}
 		
 		FileCache c = new FileCache();
 		File bd = new File(basedir);
-		c.setBasedir(bd);
+		try {
+			c.setBasedir(bd);
+		} catch (IOException ioe) {
+			throw new ServletException(ioe);
+		}
 		db = new DataBroker();
 		db.setRetriever( new Retriever(c) );
 		db.setLoader(new Loader(c));
@@ -106,15 +113,6 @@ public class DataManager extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		doGet(req, resp);
-	}
-
-	@Override
-	protected void doPut(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		Specifier spec = parseSpecifier(req);
-		checkSpec(spec);
-		
-//		db.put(spec, req.getInputStream());
 	}
 
 }

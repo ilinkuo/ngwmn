@@ -16,10 +16,10 @@ public class PipeStatistics {
 	}
 
 	private int count;
-	private PipeStatistics.Status status;
+	private PipeStatistics.Status status = Status.OPEN;
 	private long start = 0;
 	private long end = 0;
-	private Class calledBy;
+	private Class<?> calledBy;
 	private Specifier specifier;
 	
 	public synchronized int getCount() {
@@ -53,7 +53,15 @@ public class PipeStatistics {
 
 	@Override
 	public String toString() {
-		return String.format("Statistics [count=%s, status=%s]", count, status);
+		StringBuilder builder = new StringBuilder();
+		builder.append("PipeStatistics [count=").append(count)
+				.append(", status=").append(status)
+				.append(", start=").append(start)
+				.append(", calledBy=").append(calledBy)
+				.append(", specifier=").append(specifier)
+				.append(", elapsedMSec=").append(getElapsedMSec())
+				.append("]");
+		return builder.toString();
 	}
 	
 	public void markStart() {
@@ -71,11 +79,11 @@ public class PipeStatistics {
 		return null;
 	}
 
-	public Class getCalledBy() {
+	public Class<?> getCalledBy() {
 		return calledBy;
 	}
 
-	public void setCalledBy(Class calledBy) {
+	public void setCalledBy(Class<?> calledBy) {
 		this.calledBy = calledBy;
 	}
 
@@ -105,5 +113,6 @@ public class PipeStatistics {
 	public void setSpecifier(Specifier specifier) {
 		this.specifier = specifier;
 	}
+	
 	
 }

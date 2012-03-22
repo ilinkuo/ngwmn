@@ -9,10 +9,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class Pipeline {
-	Invoker invoker;
-	InputStream is;
-	OutputStream os;
-	PipeStatistics statistics = new PipeStatistics();
+	private Invoker invoker;
+	private InputStream is;
+	private OutputStream os;
+	private PipeStatistics statistics = new PipeStatistics();
 	
 	public void setInputStream(InputStream in) {
 		is = in;
@@ -28,6 +28,8 @@ public class Pipeline {
 	public void setInvoker(Invoker invoke) {
 		invoker = invoke;
 	}
+	
+	// TODO consider implementing Runnable or Callable to make it easy to multithread input for multiple site download
 	
 	public void invoke() throws IOException {
 		statistics.markStart();

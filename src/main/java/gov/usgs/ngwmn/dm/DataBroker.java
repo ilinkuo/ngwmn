@@ -29,6 +29,9 @@ public class DataBroker {
 		boolean success = configureInput(retriever, spec, pipe);
 		
 		if ( ! success) {
+			// TODO Perhaps loader interface should be changed so it gets a Pipeline
+			// onto which it splices its output, so it can record statistics after 
+			// load is finished.
 			out = new TeeOutputStream(out, loader.getOutputStream(spec));
 			pipe.setOutputStream(out);
 			success = configureInput(harvester, spec, pipe); 
@@ -38,6 +41,7 @@ public class DataBroker {
 			signalDataNotFoundMsg(spec, pipe);
 		}
 		pipe.invoke();
+		logger.info("Completed operation for {} result {}", spec, pipe.getStatistics());
 	}
 	
 	private void signalDataNotFoundMsg(Specifier spec, Pipeline pipe) throws Exception {
@@ -63,7 +67,9 @@ public class DataBroker {
 	
 	boolean configureInput(DataFetcher dataFetcher, Specifier spec, Pipeline pipe) throws Exception {
 		if (dataFetcher != null) {
-			return dataFetcher.configureInput(spec, pipe);
+			boolean v = dataFetcher.configureInput(spec, pipe);
+			pipe.getStatistics().setCalledBy(dataFetcher.getClass());
+			return v;
 		}
 		return false;
 	}

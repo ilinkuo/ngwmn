@@ -1,8 +1,10 @@
 package gov.usgs.ngwmn.dm.cache.fs;
 
 import gov.usgs.ngwmn.dm.cache.Cache;
+import gov.usgs.ngwmn.dm.cache.CacheInfo;
 import gov.usgs.ngwmn.dm.cache.Specifier;
 import gov.usgs.ngwmn.dm.cache.PipeStatistics;
+import gov.usgs.ngwmn.dm.cache.PipeStatistics.Status;
 import gov.usgs.ngwmn.dm.io.FileInputInvoker;
 import gov.usgs.ngwmn.dm.io.Invoker;
 import gov.usgs.ngwmn.dm.io.Pipeline;
@@ -13,7 +15,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,11 +26,44 @@ public class FileCache implements Cache {
 	
 	private File basedir;
 	private String filename(Specifier spec) {
-		return spec.getFeatureID();
+		// TODO Use WellDataType too
+		// TODO Make robust against arbitrary featureID strings
+		return spec.getAgencyID()+"_"+spec.getFeatureID()+"_"+spec.getTypeID();
+	}
+	private String safeFileName(Specifier spec) {
+		String starter = filename(spec);
+		String scrambled = DigestUtils.md5Hex(starter);
+		return scrambled;
 	}
 	
-	private File contentFile(Specifier spec) {
-		return new File(basedir,filename(spec));
+	private boolean isSafeFilename(String fn) {
+		// could try to create the file, then delete it on success.
+		// but that's pretty heavy-handed.
+		// also susceptible to path injection, if ../ is allowed in input
+		
+		/* I wish this worked...
+		 */
+/*		try {
+ * 			File f = new File(fn);
+			f.getCanonicalPath();
+			// return true;
+		} catch (IOException ioe) {
+			return false;
+		}
+*/		
+		return ! fn.matches(".*[/\\*\n\r:<>].*");
+	}
+	
+	protected final File contentFile(Specifier spec) {
+		
+		String fname = filename(spec);
+		if ( ! isSafeFilename(fname)) {
+			String sfname = safeFileName(spec);
+			logger.warn("had to encode {} to {}", fname, sfname);
+			fname = sfname;			
+		}
+		File v = new File(basedir,fname);
+		return v;
 	}
 	
 	/**
@@ -41,9 +78,10 @@ public class FileCache implements Cache {
 		
 		// TODO Need to make these stats available to DataBroker
 		PipeStatistics s = new PipeStatistics();
+		s.setStatus(Status.OPEN);
 		
 		OutputStream v = new TempfileOutputStream(f, tf, s);
-		logger.info("Created tfos for {}", well);
+		logger.info("Created tempfile output for {}", well);
 		return v;
 	}
 	
@@ -97,7 +135,22 @@ public class FileCache implements Cache {
 		return basedir;
 	}
 
-	public void setBasedir(File basedir) {
+	public void setBasedir(File basedir) throws IOException {
+		if ( ! basedir.exists()) {
+			boolean ok = basedir.mkdirs();
+			if ( ! ok) {
+				logger.warn("Failed to create base dir {}", basedir);
+			}
+		}
+		if ( ! basedir.exists() ) {
+			throw new IOException("Base directory does not exist");			
+		}
+		if ( ! basedir.isDirectory() ) {
+			throw new IOException("Bse dir not a directory");
+		}
+		if ( ! basedir.canRead()) {
+			throw new IOException("Cannot read base directory");
+		}
 		this.basedir = basedir;
 	}
 
@@ -116,6 +169,25 @@ public class FileCache implements Cache {
 			logger.warn("file exists but not readable {}", f);
 		}
 		return true;
+	}
+
+	@Override
+	public CacheInfo getInfo(Specifier spec) {
+		File f = contentFile(spec);
+
+		boolean exists = f.exists() && f.canRead();
+		Date created = null;
+		long sz = -1;
+		Date modified = null;
+		
+		if (exists) {
+			modified = new Date(f.lastModified());
+			// Java 6 does not provide access to file create time
+			// Java 7 does
+			sz = f.length();
+		}
+		
+		return new CacheInfo(created, exists, modified, sz);
 	}
 	
 	
