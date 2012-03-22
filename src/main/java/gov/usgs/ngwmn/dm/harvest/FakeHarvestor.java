@@ -7,9 +7,14 @@ import gov.usgs.ngwmn.dm.io.Pipeline;
 public class FakeHarvestor implements DataFetcher {
 
 	@Override
-	public boolean fetchWellData(Specifier spec, Pipeline pipe)
+	public boolean configureInput(Specifier spec, Pipeline pipe)
 			throws Exception {
-		return false;
+		
+		if (spec.getAgencyID().contains("FAIL")) {
+			return false;
+		}
+		pipe.setInvoker(new FakeInputInvoker(spec));
+		return true;
 	}
 
 }

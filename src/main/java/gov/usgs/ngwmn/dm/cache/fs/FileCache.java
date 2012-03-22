@@ -58,6 +58,7 @@ public class FileCache implements Cache {
 		
 		FileInputStream fis = new FileInputStream(f);
 		pipe.setInputStream(fis);
+		pipe.getStatistics().setSpecifier(spec);
 		Invoker i = new FileInputInvoker();
 		pipe.setInvoker(i);
 		
@@ -82,7 +83,7 @@ public class FileCache implements Cache {
 			stat.incrementCount(ict);
 		}
 		
-		// TODO close here?
+		os.close();
 	}
 
 	public static void copyStream(InputStream is, OutputStream os, PipeStatistics stats) 

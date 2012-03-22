@@ -2,8 +2,8 @@ package gov.usgs.ngwmn.dm.cache;
 
 import java.util.Date;
 
-
 public class PipeStatistics {
+	
 	public static enum Status {
 		OPEN(false),
 		FAIL(true),
@@ -20,6 +20,7 @@ public class PipeStatistics {
 	private long start = 0;
 	private long end = 0;
 	private Class calledBy;
+	private Specifier specifier;
 	
 	public synchronized int getCount() {
 		return count;
@@ -95,6 +96,14 @@ public class PipeStatistics {
 	public boolean isDone() {
 		return getStatus().done;
 				
+	}
+
+	public Specifier getSpecifier() {
+		return specifier;
+	}
+
+	public void setSpecifier(Specifier specifier) {
+		this.specifier = specifier;
 	}
 	
 }

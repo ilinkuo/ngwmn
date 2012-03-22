@@ -12,5 +12,5 @@ public interface DataFetcher {
 	 * @return
 	 * @throws Exception
 	 */
-	boolean fetchWellData(Specifier spec, Pipeline pipe) throws Exception;
+	boolean configureInput(Specifier spec, Pipeline pipe) throws Exception;
 }

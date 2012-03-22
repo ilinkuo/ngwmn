@@ -11,7 +11,7 @@ public class Retriever implements DataFetcher {
 	}
 
 	@Override
-	public boolean fetchWellData(Specifier spec, Pipeline pipe)
+	public boolean configureInput(Specifier spec, Pipeline pipe)
 			throws Exception 
 	{
 		if (cache.contains(spec)) {

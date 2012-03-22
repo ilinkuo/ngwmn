@@ -63,7 +63,7 @@ public class DataBroker {
 	
 	boolean configureInput(DataFetcher dataFetcher, Specifier spec, Pipeline pipe) throws Exception {
 		if (dataFetcher != null) {
-			return dataFetcher.fetchWellData(spec, pipe);
+			return dataFetcher.configureInput(spec, pipe);
 		}
 		return false;
 	}
