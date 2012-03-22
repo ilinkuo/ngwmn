@@ -44,8 +44,8 @@ public class Specifier {
 			throw new InvalidParameterException("Well agency Id is required.");
 		if ( StringUtils.isEmpty(spec.getFeatureID()) ) 
 			throw new InvalidParameterException("Well Feature/Site Id is required.");
-//		if ( spec.getTypeID() == null ) 
-//			throw new InvalidParameterException("Well data type Id is required.");
+		if ( spec.getTypeID() == null ) 
+			throw new InvalidParameterException("Well data type Id is required.");
 	}
 	
 }
