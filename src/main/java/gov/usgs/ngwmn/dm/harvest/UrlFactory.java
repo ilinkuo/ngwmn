@@ -16,16 +16,18 @@ public class UrlFactory {
 	private static Map<WellDataType, String> urls = new HashMap<WellDataType, String>();
 	
 	static {
-		Properties props = new Properties();
+		Properties props   = new Properties();
 		ClassLoader loader = UrlFactory.class.getClassLoader();
+		String urlFile     = "well-url.properties";
 		try {
-			props.load(loader.getResourceAsStream("well-url.properties"));
+			props.load( loader.getResourceAsStream(urlFile) );
 		} catch (IOException e) {
-			throw new RuntimeException("The ", e);
+			throw new RuntimeException("The URL mappings file not found, " + urlFile, e);
 		}
 		String baseUrl = (String)props.get("BASE");
 		for (WellDataType type : WellDataType.values()) {
-			String url = baseUrl + (String) props.get( type.toString() );
+			String url = (String) props.get( type.toString() );
+			url = url.replace("<BASE>",baseUrl);
 			urls.put(type, url);
 		}
 	}
@@ -33,17 +35,13 @@ public class UrlFactory {
 	public String makeUrl(Specifier spec) {
 		Specifier.check(spec);
 		
-		String url = null;
-		for (WellDataType type : WellDataType.values()) {
-			url = urls.get(type);
-			if ( ! StringUtils.isEmpty(url) ) {
-				url = injectParams(url, spec.getAgencyID(), spec.getFeatureID());
-				break;
-			}
-		}
+		String url = urls.get( spec.getTypeID() );
+		
 		if ( StringUtils.isEmpty(url) ) {
 			throw new RuntimeException("UrlFactory failed to construct a url for " + spec);
 		}
+		
+		url = injectParams(url, spec.getAgencyID(), spec.getFeatureID());
 		return url;
 	}
 
