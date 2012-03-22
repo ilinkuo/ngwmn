@@ -7,7 +7,6 @@ import gov.usgs.ngwmn.dm.io.TeeOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.security.InvalidParameterException;
 
 public class DataBroker {
 
@@ -20,7 +19,7 @@ public class DataBroker {
 	public void fetchWellData(Specifier spec, OutputStream out) throws Exception {
 		Pipeline pipe = new Pipeline();
 
-		validate(spec);
+		check(spec);
 		
 		pipe.setOutputStream(out);
 		boolean success = fetchWellData(retriever, spec, pipe);
@@ -51,13 +50,10 @@ public class DataBroker {
 		this.loader = loader;
 	}
 	
-	void validate(Specifier spec) throws Exception {
+	void check(Specifier spec) throws Exception {
 		if (retriever == null && harvester == null) 
 			throw new NullPointerException("At least one Data Fetcher is required");
-		if ( isEmpty(spec.getFeatureID()) ) 
-			throw new InvalidParameterException("Well Site Id may not be null");
-		if ( spec.getTypeID() != null ) 
-			throw new InvalidParameterException("Well data type Id may not be null");
+		Specifier.check(spec);
 	}
 	
 	boolean fetchWellData(DataFetcher dataFetcher, Specifier spec, Pipeline pipe) throws Exception {

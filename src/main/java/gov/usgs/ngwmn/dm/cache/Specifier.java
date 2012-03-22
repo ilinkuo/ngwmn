@@ -1,26 +1,23 @@
 package gov.usgs.ngwmn.dm.cache;
 
 
+import java.security.InvalidParameterException;
+
+import org.apache.commons.lang.StringUtils;
+
 import gov.usgs.ngwmn.WellDataType;
 
 public class Specifier {
-//	private String agency;
-//	private String well;
+	private String agencyID;
 	private String featureID;
 	private WellDataType typeID;
 	
-//	public String getAgency() {
-//		return agency;
-//	}
-//	public void setAgency(String agency) {
-//		this.agency = agency;
-//	}
-//	public String getWell() {
-//		return well;
-//	}
-//	public void setWell(String well) {
-//		this.well = well;
-//	}
+	public String getAgencyID() {
+		return agencyID;
+	}
+	public void setAgencyID(String agency) {
+		this.agencyID = agency;
+	}
 	
 	public String getFeatureID() {
 		return featureID;
@@ -42,5 +39,13 @@ public class Specifier {
 		return "Specifier [featureID=" + featureID + " typeID=" + typeID + "]";
 	}
 
+	public static void check(Specifier spec) {
+		if ( StringUtils.isEmpty(spec.getAgencyID()) ) 
+			throw new InvalidParameterException("Well agency Id is required.");
+		if ( StringUtils.isEmpty(spec.getFeatureID()) ) 
+			throw new InvalidParameterException("Well Feature/Site Id is required.");
+		if ( spec.getTypeID() == null ) 
+			throw new InvalidParameterException("Well data type Id is required.");
+	}
 	
 }

@@ -1,7 +1,5 @@
 package gov.usgs.ngwmn.dm.cache;
 
-import java.io.IOException;
-
 import gov.usgs.ngwmn.dm.DataFetcher;
 import gov.usgs.ngwmn.dm.io.Pipeline;
 

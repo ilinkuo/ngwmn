@@ -1,0 +1,5 @@
+BASE      = http://cida.usgs.gov/cocoon/gin/gwdp/agency/<agencyId>/
+LOG       = wfs?request=GetFeature&featureId=<featureId>
+WATERLEVEL= sos?request=GetObservation&featureId=<featureId>
+QUALITY   = qw?mimeType=xml&siteid=<featureId>
+ALL       = NotSpecified
