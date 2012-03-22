@@ -15,9 +15,11 @@ public interface Cache {
 	 */
 	public OutputStream destination(Specifier well) throws IOException;
 
-	public Statistics fetchWellData(Specifier spec, Pipeline pipe)
+	public boolean fetchWellData(Specifier spec, Pipeline pipe)
 			throws IOException;
 
 	public boolean contains(Specifier spec);
-
+	
+	public enum Status {OK,FAIL,DONE};
 }
+

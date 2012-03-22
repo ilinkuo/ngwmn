@@ -11,11 +11,13 @@ public class Retriever implements DataFetcher {
 	}
 
 	@Override
-	public boolean fetchWellData(Specifier spec, Pipeline pipe) throws Exception {
-		return cache.fetchWellData(spec, pipe) != null; // TODO place holder for now
+	public boolean fetchWellData(Specifier spec, Pipeline pipe)
+			throws Exception 
+	{
+		if (cache.contains(spec)) {
+			return cache.fetchWellData(spec, pipe); 
+		}
+		return false;
 	}
 	
-	public boolean contains(Specifier spec) {
-		return cache.contains(spec);
-	}
 }

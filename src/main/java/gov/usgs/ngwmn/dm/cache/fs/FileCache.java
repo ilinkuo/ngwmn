@@ -3,6 +3,8 @@ package gov.usgs.ngwmn.dm.cache.fs;
 import gov.usgs.ngwmn.dm.cache.Cache;
 import gov.usgs.ngwmn.dm.cache.Specifier;
 import gov.usgs.ngwmn.dm.cache.Statistics;
+import gov.usgs.ngwmn.dm.io.FileInputInvoker;
+import gov.usgs.ngwmn.dm.io.Invoker;
 import gov.usgs.ngwmn.dm.io.Pipeline;
 import gov.usgs.ngwmn.dm.io.TempfileOutputStream;
 
@@ -30,6 +32,7 @@ public class FileCache implements Cache {
 	/**
 	 * @see gov.usgs.ngwmn.dm.cache.Cache#putter(gov.usgs.ngwmn.dm.cache.Specifier)
 	 */
+	@Override
 	public OutputStream destination(Specifier well)
 			throws IOException
 	{
@@ -44,22 +47,21 @@ public class FileCache implements Cache {
 		return v;
 	}
 	
-	public enum Status {OK,FAIL,DONE};
-	
 	/**
 	 * @see gov.usgs.ngwmn.dm.cache.Cache#get(gov.usgs.ngwmn.dm.cache.Specifier, java.io.OutputStream)
 	 */
-	public Statistics fetchWellData(Specifier spec, Pipeline pipe) 
+	@Override
+	public boolean fetchWellData(Specifier spec, Pipeline pipe) 
 			throws IOException
 	{
 		File f = contentFile(spec);
 		
 		FileInputStream fis = new FileInputStream(f);
-		Statistics stat = new Statistics();
-		copyTo(fis, pipe.getOutputStream(), stat);
+		pipe.setInputStream(fis);
+		Invoker i = new FileInputInvoker();
+		pipe.setInvoker(i);
 		
-		logger.info("Copied {} to destination, stats={}", spec, stat);
-		return stat;
+		return true;
 	}
 	
 	private static void copyTo(InputStream is, OutputStream os, Statistics stat) 

@@ -1,6 +1,7 @@
 package gov.usgs.ngwmn.dm.io;
 
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -24,7 +25,7 @@ public class Pipeline {
 		invoker = invoke;
 	}
 	
-	public void invoke() {
+	public void invoke() throws IOException {
 		invoker.invoke(is,os);
 	}
 	

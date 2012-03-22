@@ -49,10 +49,10 @@ public class DataManager extends HttpServlet {
 			
 			ServletOutputStream puttee = resp.getOutputStream();
 			try {
+				logger.info("Getting well data for {}", spec);
 				db.fetchWellData(spec, puttee);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Problem getting well data", e);
 			} finally {
 				puttee.close();
 			}
@@ -81,6 +81,12 @@ public class DataManager extends HttpServlet {
 		}
 		WellDataType wdt = WellDataType.valueOf(type);
 		spec.setTypeID(wdt);
+		
+		String agency = req.getParameter("agencyID");
+		if (agency == null) {
+			agency = "USGS";
+		}
+		spec.setAgencyID(agency);
 		
 		return spec;
 	}

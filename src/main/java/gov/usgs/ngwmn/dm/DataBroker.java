@@ -67,12 +67,4 @@ public class DataBroker {
 	boolean isEmpty(String string) {
 		return string == null || string.length()==0;
 	}
-	// to be enh to return the read byte back
-	boolean isEmpty(InputStream stream) {
-		try {
-			return stream == null || stream.read() == -1;
-		} catch (IOException e) {
-			return true;
-		}
-	}
 }

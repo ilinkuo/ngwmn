@@ -1,7 +1,7 @@
 package gov.usgs.ngwmn.dm.io;
 
 import gov.usgs.ngwmn.dm.cache.Statistics;
-import gov.usgs.ngwmn.dm.cache.fs.FileCache.Status;
+import gov.usgs.ngwmn.dm.cache.Cache.Status;
 
 import java.io.File;
 import java.io.FileOutputStream;
