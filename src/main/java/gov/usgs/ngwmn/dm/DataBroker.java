@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DataBroker {
 
 	private DataFetcher harvester;
@@ -15,6 +18,7 @@ public class DataBroker {
 
 	private DataLoader  loader;
 	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	public void fetchWellData(Specifier spec, OutputStream out) throws Exception {
 		Pipeline pipe = new Pipeline();
@@ -22,22 +26,23 @@ public class DataBroker {
 		check(spec);
 		
 		pipe.setOutputStream(out);
-		boolean success = fetchWellData(retriever, spec, pipe);
+		boolean success = configureInput(retriever, spec, pipe);
 		
 		if ( ! success) {
 			out = new TeeOutputStream(out, loader.getOutputStream(spec));
 			pipe.setOutputStream(out);
-			success = fetchWellData(harvester, spec, pipe); 
+			success = configureInput(harvester, spec, pipe); 
 		}
 		
 		if ( ! success) {
-			attachDataNotFoundMsg(pipe);
+			signalDataNotFoundMsg(spec, pipe);
 		}
 		pipe.invoke();
 	}
 	
-	private void attachDataNotFoundMsg(Pipeline pipe) {
-		
+	private void signalDataNotFoundMsg(Specifier spec, Pipeline pipe) throws Exception {
+		logger.warn("No data found for {}", spec);
+		throw new Exception("No data found");
 	}
 	
 	public void setHarvester(DataFetcher harvester) {
@@ -56,7 +61,7 @@ public class DataBroker {
 		Specifier.check(spec);
 	}
 	
-	boolean fetchWellData(DataFetcher dataFetcher, Specifier spec, Pipeline pipe) throws Exception {
+	boolean configureInput(DataFetcher dataFetcher, Specifier spec, Pipeline pipe) throws Exception {
 		if (dataFetcher != null) {
 			return dataFetcher.fetchWellData(spec, pipe);
 		}

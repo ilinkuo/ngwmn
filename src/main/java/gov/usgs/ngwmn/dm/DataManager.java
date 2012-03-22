@@ -1,9 +1,11 @@
 package gov.usgs.ngwmn.dm;
 
 import gov.usgs.ngwmn.WellDataType;
+import gov.usgs.ngwmn.dm.cache.Loader;
 import gov.usgs.ngwmn.dm.cache.Retriever;
 import gov.usgs.ngwmn.dm.cache.Specifier;
 import gov.usgs.ngwmn.dm.cache.fs.FileCache;
+import gov.usgs.ngwmn.dm.harvest.FakeHarvestor;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +35,9 @@ public class DataManager extends HttpServlet {
 		c.setBasedir(bd);
 		db = new DataBroker();
 		db.setRetriever( new Retriever(c) );
+		db.setLoader(new Loader(c));
+		
+		db.setHarvester(new FakeHarvestor());
 	}
 
 	@Override
