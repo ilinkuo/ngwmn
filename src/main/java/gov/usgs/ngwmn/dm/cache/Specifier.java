@@ -36,7 +36,11 @@ public class Specifier {
 	
 	@Override
 	public String toString() {
-		return "Specifier [featureID=" + featureID + " typeID=" + typeID + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("Specifier [agencyID=").append(agencyID)
+				.append(", featureID=").append(featureID)
+				.append(", typeID=").append(typeID).append("]");
+		return builder.toString();
 	}
 
 	public static void check(Specifier spec) {

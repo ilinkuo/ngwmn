@@ -20,11 +20,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DataManager extends HttpServlet {
+public class DataManagerServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 2L;
 	private DataBroker db;
-	private Logger logger = LoggerFactory.getLogger(DataManager.class);
+	private Logger logger = LoggerFactory.getLogger(DataManagerServlet.class);
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -40,6 +40,7 @@ public class DataManager extends HttpServlet {
 		} catch (IOException ioe) {
 			throw new ServletException(ioe);
 		}
+		
 		db = new DataBroker();
 		db.setRetriever( new Retriever(c) );
 		db.setLoader(    new Loader(c)    );
@@ -53,9 +54,13 @@ public class DataManager extends HttpServlet {
 		Specifier spec = parseSpecifier(req);
 		checkSpec(spec);
 		
+		String well_name = wellname(spec);
+		
 		try {
 			// resp.setContentType("application/xml");
-			resp.setContentType("text/plain");
+			resp.setContentType("application/zip");
+			resp.setHeader("Content-Disposition", "attachment; filename="+well_name+".zip");
+			// resp.setContentType("text/plain");
 			resp.setCharacterEncoding("utf8");
 			
 			ServletOutputStream puttee = resp.getOutputStream();
@@ -71,6 +76,10 @@ public class DataManager extends HttpServlet {
 			logger.info("Done with request for specifier {}", spec);
 		}
 		
+	}
+
+	private String wellname(Specifier spec) {
+		return spec.getAgencyID() + "_" + spec.getFeatureID();
 	}
 
 	/** Parse a specifier from the request.
