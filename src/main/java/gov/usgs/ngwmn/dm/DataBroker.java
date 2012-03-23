@@ -4,8 +4,6 @@ import gov.usgs.ngwmn.dm.cache.Specifier;
 import gov.usgs.ngwmn.dm.io.Pipeline;
 import gov.usgs.ngwmn.dm.io.TeeOutputStream;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.slf4j.Logger;

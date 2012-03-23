@@ -19,7 +19,7 @@ public class PipeStatistics {
 	private PipeStatistics.Status status;
 	private long start = 0;
 	private long end = 0;
-	private Class calledBy;
+	private Class<?> calledBy;
 	private Specifier specifier;
 	
 	public synchronized int getCount() {
@@ -71,11 +71,11 @@ public class PipeStatistics {
 		return null;
 	}
 
-	public Class getCalledBy() {
+	public Class<?> getCalledBy() {
 		return calledBy;
 	}
 
-	public void setCalledBy(Class calledBy) {
+	public void setCalledBy(Class<?> calledBy) {
 		this.calledBy = calledBy;
 	}
 
