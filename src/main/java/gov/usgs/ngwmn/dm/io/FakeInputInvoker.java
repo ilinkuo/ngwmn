@@ -1,4 +1,4 @@
-package gov.usgs.ngwmn.dm.harvest;
+package gov.usgs.ngwmn.dm.io;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -8,7 +8,6 @@ import java.io.OutputStream;
 import gov.usgs.ngwmn.dm.cache.PipeStatistics;
 import gov.usgs.ngwmn.dm.cache.Specifier;
 import gov.usgs.ngwmn.dm.cache.fs.FileCache;
-import gov.usgs.ngwmn.dm.io.Invoker;
 
 public class FakeInputInvoker implements Invoker {
 
