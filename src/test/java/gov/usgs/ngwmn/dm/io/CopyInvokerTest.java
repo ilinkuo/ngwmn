@@ -3,7 +3,6 @@ package gov.usgs.ngwmn.dm.io;
 import static org.junit.Assert.*;
 
 import gov.usgs.ngwmn.dm.cache.PipeStatistics;
-import gov.usgs.ngwmn.dm.harvest.CopyInvoker;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
