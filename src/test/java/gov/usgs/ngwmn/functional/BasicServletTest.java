@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import gov.usgs.ngwmn.dm.DataManagerServlet;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
@@ -19,6 +20,21 @@ import com.meterware.servletunit.ServletUnitClient;
 
 public class BasicServletTest {
 
+	@BeforeClass
+	public static void clearCache() {
+		File c = new File("/tmp/gwdp-cache");
+		if (c.exists() && c.isDirectory()) {
+			for (File f : c.listFiles()) {
+				boolean did = f.delete();
+				if (did) {
+					System.out.printf("Deleted cache file %s\n", f);
+				} else {
+					System.out.printf("Could not delete cache file %s\n", f);
+				}
+			}
+		}
+	}
+	
 	@Test
 	public void testWithData() throws Exception {
 		ServletRunner sr = new ServletRunner(this.getClass().getResourceAsStream("servlet-test-web.xml"), "/ngwmn");
