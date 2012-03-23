@@ -12,8 +12,12 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Harvester implements DataFetcher {
+	
+	private static Logger logger = LoggerFactory.getLogger(Harvester.class);
 
 	private UrlFactory urlFactory = new UrlFactory();
 	
@@ -26,6 +30,8 @@ public class Harvester implements DataFetcher {
 		
 		String url = urlFactory.makeUrl(spec);
 		
+		logger.info("Fetching data for {} from {}", spec, url);
+		
 		HttpClient client = new HttpClient();
 		HttpMethod method = new GetMethod(url);
 		int statusCode = client.executeMethod(method);
@@ -35,6 +41,7 @@ public class Harvester implements DataFetcher {
         	return false;
         }
 		InputStream is = method.getResponseBodyAsStream();
+		logger.info("response stream available {}", is.available());
 		pipe.setInputStream(is);
 		
 		return true;
