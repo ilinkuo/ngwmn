@@ -25,11 +25,15 @@ public class BasicServletTest {
 		File c = new File("/tmp/gwdp-cache");
 		if (c.exists() && c.isDirectory()) {
 			for (File f : c.listFiles()) {
-				boolean did = f.delete();
-				if (did) {
-					System.out.printf("Deleted cache file %s\n", f);
+				if (f.canWrite()) {
+					boolean did = f.delete();
+					if (did) {
+						System.out.printf("Deleted cache file %s\n", f);
+					} else {
+						System.out.printf("Could not delete cache file %s\n", f);
+					}
 				} else {
-					System.out.printf("Could not delete cache file %s\n", f);
+					System.out.printf("Preserving cache file %s\n", f);
 				}
 			}
 		}
@@ -79,6 +83,22 @@ public class BasicServletTest {
 		WebRequest req = new GetMethodWebRequest("http://localhost:8080/ngwmn/data?featureID=NOSUCHSITE&agency_cd=USGS");
 		WebResponse resp = sc.getResponse(req);
 		assertFalse("expected exception", true);
+	}
+	
+	// Now repeat the tests; we expect to get cached results
+	@Test(timeout=1000)
+	public void testWithData_2() throws Exception {
+		testWithData();
+	}
+	
+	@Test(timeout=1000)
+	public void testWithNoData_2() throws Exception {
+		testWithNoData();
+	}
+
+	@Test(expected=HttpNotFoundException.class,timeout=1000)
+	public void testNonSite_2() throws Exception {
+		testNonSite();
 	}
 
 }
