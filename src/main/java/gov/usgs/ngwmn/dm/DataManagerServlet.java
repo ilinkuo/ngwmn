@@ -63,14 +63,33 @@ public class DataManagerServlet extends HttpServlet {
 			// resp.setContentType("text/plain");
 			resp.setCharacterEncoding("utf8");
 			
+			// ensure that buffer size is greater than magic lower limit for
+			// non-extant sites
+			if (resp.getBufferSize() < 2000) {
+				resp.setBufferSize(8*1024); // a reasonable guess at efficiency
+			}
 			ServletOutputStream puttee = resp.getOutputStream();
 			try {
 				logger.info("Getting well data for {}", spec);
 				db.fetchWellData(spec, puttee);
+			} catch (NoSuchSiteException nse) {
+				// this may fail, if detected after output buffer has been flushed
+				resp.resetBuffer();
+				puttee = null;
+				resp.sendError(HttpServletResponse.SC_NOT_FOUND, nse.getLocalizedMessage());
+			} catch (DataNotAvailableException nda) {
+				resp.resetBuffer();
+				puttee = null;
+				// TODO What's the right error code? 503? 504?
+				resp.sendError(HttpServletResponse.SC_GATEWAY_TIMEOUT, nda.getLocalizedMessage());
 			} catch (Exception e) {
 				logger.error("Problem getting well data", e);
+				puttee = null;
+				throw new ServletException(e);
 			} finally {
-				puttee.close();
+				if (puttee != null) {
+					puttee.close();
+				}
 			}
 		} finally {
 			logger.info("Done with request for specifier {}", spec);

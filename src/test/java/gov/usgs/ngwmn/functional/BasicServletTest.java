@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import com.meterware.httpunit.GetMethodWebRequest;
+import com.meterware.httpunit.HttpNotFoundException;
 import com.meterware.httpunit.WebRequest;
 import com.meterware.httpunit.WebResponse;
 import com.meterware.servletunit.ServletRunner;
@@ -53,22 +54,15 @@ public class BasicServletTest {
 		assertTrue("response size", body.length() > 2000);
 	}
 
-	@Test
+	@Test(expected=HttpNotFoundException.class)
 	public void testNonSite() throws Exception {
-		// this site does not exist
+		// this site does not exist, so we expect an Exception when fetching
 		ServletRunner sr = new ServletRunner(this.getClass().getResourceAsStream("servlet-test-web.xml"), "/ngwmn");
 		
 		ServletUnitClient sc = sr.newClient();
 		WebRequest req = new GetMethodWebRequest("http://localhost:8080/ngwmn/data?featureID=NOSUCHSITE&agency_cd=USGS");
 		WebResponse resp = sc.getResponse(req);
-		assertNotNull("response", resp);
-		
-		for (String hn : resp.getHeaderFieldNames()) {
-			System.out.printf("Header %s:%s\n", hn, resp.getHeaderField(hn));
-		}
-		String body = resp.getText();
-		System.out.printf("contentLength=%d,size=%d\n", resp.getContentLength(), body.length());
-		assertFalse("response size", body.length() > 2000);
+		assertFalse("expected exception", true);
 	}
 
 }

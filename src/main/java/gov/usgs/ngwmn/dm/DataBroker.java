@@ -35,16 +35,23 @@ public class DataBroker {
 			success = configureInput(harvester, spec, pipe); 
 		}
 		
+		// TODO It's doubtful if we can detect this until we run the pipe.
+		// TODO We need to distinguish "site not found" and "data not found"
 		if ( ! success) {
 			signalDataNotFoundMsg(spec, pipe);
 		}
 		pipe.invoke();
+		
+		// TODO Temporary measure, in lieu of a more authoritative check per Well_Registry
+		if (pipe.getStatistics().getCount() < 2000) {
+			throw new NoSuchSiteException(spec);
+		}
 		logger.info("Completed operation for {} result {}", spec, pipe.getStatistics());
 	}
 	
 	private void signalDataNotFoundMsg(Specifier spec, Pipeline pipe) throws Exception {
 		logger.warn("No data found for {}", spec);
-		throw new Exception("No data found");
+		throw new DataNotAvailableException(spec);
 	}
 	
 	public void setHarvester(DataFetcher harvester) {

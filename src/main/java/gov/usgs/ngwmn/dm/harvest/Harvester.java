@@ -41,7 +41,7 @@ public class Harvester implements DataFetcher {
         	return false;
         }
 		InputStream is = method.getResponseBodyAsStream();
-		logger.info("response stream available {}", is.available());
+		// it's zero, no help here  logger.info("response stream available {}", is.available());
 		pipe.setInputStream(is);
 		
 		return true;
