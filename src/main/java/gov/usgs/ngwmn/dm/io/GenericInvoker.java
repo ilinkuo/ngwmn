@@ -1,7 +1,6 @@
 package gov.usgs.ngwmn.dm.io;
 
 import gov.usgs.ngwmn.dm.cache.PipeStatistics;
-import gov.usgs.ngwmn.dm.cache.PipeStatistics.Status;
 import gov.usgs.ngwmn.dm.cache.fs.FileCache;
 
 import java.io.IOException;
