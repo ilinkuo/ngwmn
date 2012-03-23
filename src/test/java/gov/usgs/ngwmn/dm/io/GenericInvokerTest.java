@@ -41,6 +41,7 @@ public class GenericInvokerTest {
 			assertTrue("stream closed", true);
 			assertEquals("contents", sample, os.toString());
 			assertEquals("count", sample.length(), pl.getStatistics().getCount());
+			assertNotNull("elapsed time", pl.getStatistics().getElapsedMSec());
 		} catch (IOException ioe) {
 			assertEquals("noted failure", PipeStatistics.Status.FAIL, pl.getStatistics().getStatus());
 		}

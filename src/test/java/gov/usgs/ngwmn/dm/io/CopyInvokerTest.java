@@ -26,23 +26,7 @@ public class CopyInvokerTest extends GenericInvokerTest {
 	
 	@Test
 	public void testInvoke() {
-		String sample = "Hello";
-		InputStream is = new ByteArrayInputStream(sample.getBytes());
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		
-		Pipeline pl = new Pipeline();
-		pl.setInputStream(is);
-		pl.setOutputStream(os);
-		pl.setInvoker(victim);
-		try {
-			pl.invoke();
-			assertEquals("noted success", PipeStatistics.Status.DONE, pl.getStatistics().getStatus());
-			assertTrue("stream closed", true);
-			assertEquals("contents", sample, os.toString());
-			assertEquals("count", sample.length(), pl.getStatistics().getCount());
-		} catch (IOException ioe) {
-			assertEquals("noted failure", PipeStatistics.Status.FAIL, pl.getStatistics().getStatus());
-		}
+		super.testInvoke();
 	}
 
 }

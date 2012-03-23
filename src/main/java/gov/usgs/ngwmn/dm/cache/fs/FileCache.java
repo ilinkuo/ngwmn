@@ -26,8 +26,9 @@ public class FileCache implements Cache {
 	
 	private File basedir;
 	private String filename(Specifier spec) {
-		// TODO Use WellDataType too
-		// TODO Make robust against arbitrary featureID strings
+		// Note that there is no requirement to decode a cache file name; 
+		// having the file name be human-readable is helpful for debugging,
+		// not required for system operation
 		return spec.getAgencyID()+"_"+spec.getFeatureID()+"_"+spec.getTypeID();
 	}
 	private String safeFileName(Specifier spec) {
@@ -41,22 +42,28 @@ public class FileCache implements Cache {
 		// but that's pretty heavy-handed.
 		// also susceptible to path injection, if ../ is allowed in input
 		
-		/* I wish this worked...
+		/* This is too liberal -- almost any character *can* be in a Unix filename.
 		 */
 /*		try {
  * 			File f = new File(fn);
 			f.getCanonicalPath();
-			// return true;
+			// make sure they didn't spoof in a directory change
+			return fn.equals(f.getName();
 		} catch (IOException ioe) {
 			return false;
 		}
 */		
-		return ! fn.matches(".*[/\\*\n\r:<>].*");
+		return fn.matches("[A-Z a-z\\.0-9_-]+");
 	}
 	
 	protected final File contentFile(Specifier spec) {
 		
 		String fname = filename(spec);
+		if (fname.isEmpty()) {
+			// can't happen, but let's be safe
+			logger.error("Generated empty file name for spec {}", spec);
+			throw new RuntimeException("Generated empty file name");
+		}
 		if ( ! isSafeFilename(fname)) {
 			String sfname = safeFileName(spec);
 			logger.warn("had to encode {} to {}", fname, sfname);

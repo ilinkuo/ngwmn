@@ -111,5 +111,15 @@ public class FileCache_FilenameTest extends FileCache {
 		
 	}
 	
+	@Test
+	public void testPreservesSpace() {
+		Specifier spec = new Specifier();
+		spec.setFeatureID("safe name with space");
+		spec.setAgencyID("AGID");
+		spec.setTypeID(WellDataType.WATERLEVEL);
+		
+		File f1 = super.contentFile(spec);
+		assertTrue("feature ID is human-readable", f1.getName().contains(spec.getFeatureID()));
+	}
 	
 }

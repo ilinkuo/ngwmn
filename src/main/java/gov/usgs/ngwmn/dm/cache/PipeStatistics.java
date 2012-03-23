@@ -10,6 +10,9 @@ public class PipeStatistics {
 		DONE(true);
 	
 		private boolean done;
+		private boolean isDone() {
+			return done;
+		}
 		Status(boolean isDone) {
 			done = isDone;
 		}
@@ -40,15 +43,10 @@ public class PipeStatistics {
 
 	public synchronized void setStatus(PipeStatistics.Status status) {
 		this.status = status;
-		switch (status) {
-		case OPEN:
-			// not an end event
-			break;
-			
-		default:
-				markEnd();
+		if (status.isDone()) {
+			markEnd();
+			this.notifyAll();
 		}
-		this.notifyAll();
 	}
 
 	@Override
