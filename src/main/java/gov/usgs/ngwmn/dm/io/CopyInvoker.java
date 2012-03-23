@@ -18,6 +18,7 @@ public class CopyInvoker implements Invoker {
 	public void invoke(InputStream is, OutputStream os, PipeStatistics stats)
 			throws IOException {
 		int ct = IOUtils.copy(is,os);
+		os.close();
 		stats.incrementCount(ct);
 		logger.info("Copied input to destination, stats={}", new Object[]{stats});
 	}

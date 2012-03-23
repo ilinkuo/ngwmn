@@ -120,10 +120,10 @@ public class FileCache implements Cache {
 		int ops = 0;
 		while (true) {
 			int ict = is.read(buf);
-			if (ict < 0) {
+			if (ict <= 0) {
 				break;
 			}
-			os.write(buf,ops,ict);
+			os.write(buf,0,ict);
 			ops += ict;
 			stat.incrementCount(ict);
 		}
