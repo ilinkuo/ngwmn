@@ -5,6 +5,7 @@ import java.io.InputStream;
 
 import gov.usgs.ngwmn.dm.DataFetcher;
 import gov.usgs.ngwmn.dm.cache.Specifier;
+import gov.usgs.ngwmn.dm.io.CopyInvoker;
 import gov.usgs.ngwmn.dm.io.Pipeline;
 
 import org.apache.commons.httpclient.HttpClient;
