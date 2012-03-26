@@ -61,7 +61,7 @@ public class DataManagerServlet extends HttpServlet {
 			resp.setContentType("application/zip");
 			resp.setHeader("Content-Disposition", "attachment; filename="+well_name+".zip");
 			// resp.setContentType("text/plain");
-			resp.setCharacterEncoding("utf8");
+			// resp.setCharacterEncoding("utf8");
 			
 			// ensure that buffer size is greater than magic lower limit for
 			// non-extant sites
