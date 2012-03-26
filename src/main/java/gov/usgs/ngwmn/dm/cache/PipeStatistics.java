@@ -6,6 +6,7 @@ public class PipeStatistics {
 	
 	public static enum Status {
 		OPEN(false),
+		STARTED(false),
 		FAIL(true),
 		DONE(true);
 	
@@ -44,8 +45,7 @@ public class PipeStatistics {
 	public synchronized void setStatus(PipeStatistics.Status status) {
 		this.status = status;
 		if (status.isDone()) {
-			markEnd();
-			this.notifyAll();
+			throw new RuntimeException("Use markEnd instead");
 		}
 	}
 
@@ -62,15 +62,24 @@ public class PipeStatistics {
 		return builder.toString();
 	}
 	
-	public void markStart() {
+	public synchronized void markStart() {
+		if (status != Status.OPEN) {
+			throw new RuntimeException("Improper pre-start status");
+		}
+		status = Status.STARTED;
 		start = System.currentTimeMillis();
 	}
 	
-	public void markEnd() {
+	public synchronized void markEnd(Status endStatus) {
 		end = System.currentTimeMillis();
+		if (status != Status.STARTED) {
+			throw new RuntimeException("Improper pre-end status");
+		}
+		status = endStatus;
+		this.notifyAll();
 	}
 	
-	public Long getElapsedMSec() {
+	public synchronized Long getElapsedMSec() {
 		if (start > 0 && end > 0) {
 			return end-start;
 		}
@@ -85,14 +94,14 @@ public class PipeStatistics {
 		this.calledBy = calledBy;
 	}
 
-	public Date getStartDate() {
+	public synchronized Date getStartDate() {
 		if (start > 0) {
 			return new Date(start);
 		}
 		return null;
 	}
 
-	public Date getEnd() {
+	public synchronized Date getEnd() {
 		if (end > 0) {
 			return new Date(end);
 		}

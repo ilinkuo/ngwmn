@@ -5,15 +5,15 @@ import gov.usgs.ngwmn.dm.cache.Specifier;
 import javax.servlet.ServletException;
 
 // TODO Should this extend ServletException or RuntimeException?
-public class NoSuchSiteException extends ServletException {
+public class SiteNotFoundException extends ServletException {
 
 	private static final long serialVersionUID = 1L;
 
-	public NoSuchSiteException(String message) {
+	public SiteNotFoundException(String message) {
 		super(message);
 	}
 
-	public NoSuchSiteException(Specifier spec) {
+	public SiteNotFoundException(Specifier spec) {
 		super("No site found for " + spec);
 	}
 	

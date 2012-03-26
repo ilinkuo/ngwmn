@@ -72,7 +72,7 @@ public class DataManagerServlet extends HttpServlet {
 			try {
 				logger.info("Getting well data for {}", spec);
 				db.fetchWellData(spec, puttee);
-			} catch (NoSuchSiteException nse) {
+			} catch (SiteNotFoundException nse) {
 				// this may fail, if detected after output buffer has been flushed
 				resp.resetBuffer();
 				puttee = null;
@@ -121,7 +121,7 @@ public class DataManagerServlet extends HttpServlet {
 		WellDataType wdt = WellDataType.valueOf(type);
 		spec.setTypeID(wdt);
 		
-		String agency = req.getParameter("agencyID");
+		String agency = req.getParameter("agency_cd");
 		if (agency == null) {
 			agency = "USGS";
 		}

@@ -28,7 +28,8 @@ public class PipeStatisticsTest {
 		assertNull("pre-finish end time", victim.getEnd());
 		assertFalse(victim.isDone());
 		
-		victim.setStatus(Status.FAIL);
+		victim.markStart();
+		victim.markEnd(Status.FAIL);
 		assertNotNull("post-finish done time", victim.getEnd());
 		
 		assertTrue(victim.isDone());
@@ -42,7 +43,7 @@ public class PipeStatisticsTest {
 		assertNull("elapsed time afgter start", victim.getElapsedMSec());
 		
 		Thread.sleep(200);
-		victim.markEnd();
+		victim.markEnd(Status.DONE);
 		
 		Long et = victim.getElapsedMSec();
 		assertNotNull("elapsed time after finish", et);

@@ -35,9 +35,9 @@ public class Pipeline {
 		statistics.markStart();
 		try {
 			invoker.invoke(is,os, statistics);
-			statistics.setStatus(Status.DONE);
+			statistics.markEnd(Status.DONE);
 		} catch (IOException ioe) {
-			statistics.setStatus(Status.FAIL);
+			statistics.markEnd(Status.FAIL);
 			throw ioe;
 		}
 	}

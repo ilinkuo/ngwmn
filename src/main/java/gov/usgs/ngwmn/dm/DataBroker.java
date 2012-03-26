@@ -26,6 +26,10 @@ public class DataBroker {
 		pipe.setOutputStream(out);
 		boolean success = configureInput(retriever, spec, pipe);
 		
+		if (isTestSpecifier(spec)) {
+			success = configureTestInput(spec, pipe);
+		}
+		
 		if ( ! success) {
 			// TODO Perhaps loader interface should be changed so it gets a Pipeline
 			// onto which it splices its output, so it can record statistics after 
@@ -44,11 +48,29 @@ public class DataBroker {
 		
 		// TODO Temporary measure, in lieu of a more authoritative check per Well_Registry
 		if (pipe.getStatistics().getCount() < 2000) {
-			throw new NoSuchSiteException(spec);
+			throw new SiteNotFoundException(spec);
 		}
 		logger.info("Completed operation for {} result {}", spec, pipe.getStatistics());
 	}
 	
+	private boolean configureTestInput(Specifier spec, Pipeline pipe) 
+			throws Exception 
+	{
+		if ("TEST_INPUT_ERROR".equals(spec.getAgencyID())) {
+			DataFetcher unFetcher = new ErrorFetcher();
+			configureInput(unFetcher, spec, pipe);
+			return true;
+		}
+		return false;
+	}
+
+	private boolean isTestSpecifier(Specifier spec) {
+		if ("TEST_INPUT_ERROR".equals(spec.getAgencyID())) {
+			return true;
+		}
+		return false;
+	}
+
 	private void signalDataNotFoundMsg(Specifier spec, Pipeline pipe) throws Exception {
 		logger.warn("No data found for {}", spec);
 		throw new DataNotAvailableException(spec);
