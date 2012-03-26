@@ -19,22 +19,22 @@ public class PipeStatistics {
 		}
 	}
 
-	private int count;
+	private long count;
 	private PipeStatistics.Status status = Status.OPEN;
 	private long start = 0;
 	private long end = 0;
 	private Class<?> calledBy;
 	private Specifier specifier;
 	
-	public synchronized int getCount() {
+	public synchronized long getCount() {
 		return count;
 	}
 
-	public synchronized void setCount(int count) {
+	public synchronized void setCount(long count) {
 		this.count = count;
 	}
 	
-	public synchronized void incrementCount(int c) {
+	public synchronized void incrementCount(long c) {
 		this.count += c;
 	}
 

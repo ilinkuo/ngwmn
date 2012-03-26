@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.lang.StringUtils;
+import com.google.common.base.Strings;
 
 
 public class UrlFactory {
@@ -37,7 +37,7 @@ public class UrlFactory {
 		
 		String url = urls.get( spec.getTypeID() );
 		
-		if ( StringUtils.isEmpty(url) ) {
+		if ( Strings.isNullOrEmpty(url) ) {
 			throw new RuntimeException("UrlFactory failed to construct a url for " + spec);
 		}
 		

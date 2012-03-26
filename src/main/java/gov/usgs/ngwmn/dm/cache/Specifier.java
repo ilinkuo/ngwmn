@@ -3,7 +3,7 @@ package gov.usgs.ngwmn.dm.cache;
 
 import java.security.InvalidParameterException;
 
-import org.apache.commons.lang.StringUtils;
+import com.google.common.base.Strings;
 
 import gov.usgs.ngwmn.WellDataType;
 
@@ -44,9 +44,9 @@ public class Specifier {
 	}
 
 	public static void check(Specifier spec) {
-		if ( StringUtils.isEmpty(spec.getAgencyID()) ) 
+		if ( Strings.isNullOrEmpty(spec.getAgencyID()) ) 
 			throw new InvalidParameterException("Well agency Id is required.");
-		if ( StringUtils.isEmpty(spec.getFeatureID()) ) 
+		if ( Strings.isNullOrEmpty(spec.getFeatureID()) ) 
 			throw new InvalidParameterException("Well Feature/Site Id is required.");
 		if ( spec.getTypeID() == null ) 
 			throw new InvalidParameterException("Well data type Id is required.");

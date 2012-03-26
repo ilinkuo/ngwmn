@@ -14,6 +14,8 @@ public class Pipeline {
 	private OutputStream os;
 	private PipeStatistics statistics = new PipeStatistics();
 	
+	// TODO Consider using com.google.common.io.InputSupplier, OutputSupplier instead
+	
 	public void setInputStream(InputStream in) {
 		is = in;
 	}
