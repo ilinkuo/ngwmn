@@ -41,7 +41,7 @@ public class BasicServletTest {
 	
 	@Test
 	public void testWithData() throws Exception {
-		ServletRunner sr = new ServletRunner(this.getClass().getResourceAsStream("servlet-test-web.xml"), "/ngwmn");
+		ServletRunner sr = new ServletRunner(this.getClass().getResourceAsStream("/servlet-test-web.xml"), "/ngwmn");
 		
 		ServletUnitClient sc = sr.newClient();
 		WebRequest req = new GetMethodWebRequest("http://localhost:8080/ngwmn/data?featureID=383453089545001&agency_cd=USGS");
@@ -59,7 +59,7 @@ public class BasicServletTest {
 	@Test
 	public void testWithNoData() throws Exception {
 		// this site exists, but has no data (on 2012/03/23)
-		ServletRunner sr = new ServletRunner(this.getClass().getResourceAsStream("servlet-test-web.xml"), "/ngwmn");
+		ServletRunner sr = new ServletRunner(this.getClass().getResourceAsStream("/servlet-test-web.xml"), "/ngwmn");
 		
 		ServletUnitClient sc = sr.newClient();
 		WebRequest req = new GetMethodWebRequest("http://localhost:8080/ngwmn/data?featureID=440713089320801&agency_cd=USGS");
@@ -77,7 +77,7 @@ public class BasicServletTest {
 	@Test(expected=HttpNotFoundException.class)
 	public void testNonSite() throws Exception {
 		// this site does not exist, so we expect an Exception when fetching
-		ServletRunner sr = new ServletRunner(this.getClass().getResourceAsStream("servlet-test-web.xml"), "/ngwmn");
+		ServletRunner sr = new ServletRunner(this.getClass().getResourceAsStream("/servlet-test-web.xml"), "/ngwmn");
 		
 		ServletUnitClient sc = sr.newClient();
 		WebRequest req = new GetMethodWebRequest("http://localhost:8080/ngwmn/data?featureID=NOSUCHSITE&agency_cd=USGS");
