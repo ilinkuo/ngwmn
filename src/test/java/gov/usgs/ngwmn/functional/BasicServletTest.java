@@ -1,15 +1,13 @@
 package gov.usgs.ngwmn.functional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.IOException;
-
-import gov.usgs.ngwmn.dm.DataManagerServlet;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.xml.sax.SAXException;
 
 import com.meterware.httpunit.GetMethodWebRequest;
 import com.meterware.httpunit.HttpInternalErrorException;
@@ -82,7 +80,7 @@ public class BasicServletTest {
 		
 		ServletUnitClient sc = sr.newClient();
 		WebRequest req = new GetMethodWebRequest("http://localhost:8080/ngwmn/data?featureID=NOSUCHSITE&agency_cd=USGS");
-		WebResponse resp = sc.getResponse(req);
+		sc.getResponse(req);
 		assertFalse("expected exception", true);
 	}
 	
@@ -93,7 +91,7 @@ public class BasicServletTest {
 		
 		ServletUnitClient sc = sr.newClient();
 		WebRequest req = new GetMethodWebRequest("http://localhost:8080/ngwmn/data?featureID=NOSUCHSITE&agency_cd=TEST_INPUT_ERROR");
-		WebResponse resp = sc.getResponse(req);
+		sc.getResponse(req);
 		assertFalse("expected exception", true);
 	}
 
