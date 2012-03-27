@@ -117,6 +117,8 @@ public class FileCache implements Cache {
 		
 		byte[] buf = new byte[1024];
 		
+		
+		//TODO this var is not used at this time - is it for statistics?
 		int ops = 0;
 		while (true) {
 			int ict = is.read(buf);
