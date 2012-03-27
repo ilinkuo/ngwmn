@@ -5,7 +5,7 @@ import gov.usgs.ngwmn.dm.cache.Loader;
 import gov.usgs.ngwmn.dm.cache.Retriever;
 import gov.usgs.ngwmn.dm.cache.Specifier;
 import gov.usgs.ngwmn.dm.cache.fs.FileCache;
-import gov.usgs.ngwmn.dm.harvest.Harvester;
+import gov.usgs.ngwmn.dm.harvest.WebRetriever;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class DataManagerServlet extends HttpServlet {
 		db = new DataBroker();
 		db.setRetriever( new Retriever(c) );
 		db.setLoader(    new Loader(c)    );
-		db.setHarvester( new Harvester()  );
+		db.setHarvester( new WebRetriever() );
 	}
 
 	@Override
